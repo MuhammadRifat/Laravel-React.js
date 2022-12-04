@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UsersController;
 use App\Models\News;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -19,7 +20,7 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    $newses = News::latest()->simplePaginate(10);
+    $newses = News::latest()->paginate(10);
     return Inertia::render('Welcome', [
         'newses' => $newses,
     ]);
@@ -38,10 +39,16 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard/newses', [NewsController::class, 'dashboard_newses'])->name('dashboard.newses');
     Route::post('/dashboard/newses', [NewsController::class, 'insert'])->name('dashboard.newses.insert');
     Route::delete('/dashboard/newses/{news_id}', [NewsController::class, 'delete'])->name('dashboard.newses.delete');
+});
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/dashboard/users', [UsersController::class, 'index'])->name('dashboard.users');
+    Route::post('/dashboard/users', [UsersController::class, 'insert'])->name('dashboard.users.insert');
+    Route::delete('/dashboard/users/{user_id}', [UsersController::class, 'delete'])->name('dashboard.users.delete');
 });
 
 require __DIR__.'/auth.php';

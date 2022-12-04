@@ -45,9 +45,11 @@ class NewsController extends Controller
 
     public function news_details($news_id)
     {
+        $newses = News::latest()->paginate(6);
         $news = News::find($news_id);
         return Inertia::render('NewsDetails', [
             'news' => $news,
+            'latest' => $newses
         ]);
     }
 }

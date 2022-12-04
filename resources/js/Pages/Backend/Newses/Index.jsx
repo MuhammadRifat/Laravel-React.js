@@ -8,11 +8,12 @@ import TextInput from '@/Components/TextInput';
 import { Inertia } from '@inertiajs/inertia';
 
 export default function Index({ auth, newses }) {
-    const { data, setData, delete: destroy, post, processing, errors, reset } = useForm({
+    const { data, setData, delete: destroy, post, progress, processing, errors, reset } = useForm({
         title: '',
         news_category: '',
         correspondent: '',
         news_body: '',
+        news_image: ''
     });
 
     const onHandleChange = (event) => {
@@ -28,6 +29,8 @@ export default function Index({ auth, newses }) {
 
         post(route('dashboard.newses.insert'));
     };
+
+    console.log(data);
     return (
         <AuthenticatedLayout
             auth={auth}
@@ -133,6 +136,26 @@ export default function Index({ auth, newses }) {
 
                                             <InputError message={errors.news_body} className="mt-2" />
                                         </div>
+
+                                        {/* <div className="mt-4">
+                                            <InputLabel forInput="image_url" value="News Image" />
+
+                                            <TextInput
+                                                type="file"
+                                                name="image_url"
+                                                id="image_url"
+                                                value={data.news_image}
+                                                handleChange={onHandleChange}
+                                                // onChange={e => setData('news_image', e.target.files[0])}
+                                                required
+                                            />
+                                            {progress && (
+                                                <progress value={progress.percentage} max="100">
+                                                    {progress.percentage}%
+                                                </progress>
+                                            )}
+
+                                        </div> */}
 
                                         <div className="flex items-center justify-end mt-4">
 

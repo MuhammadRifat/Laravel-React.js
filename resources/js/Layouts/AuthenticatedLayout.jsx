@@ -116,6 +116,9 @@ export default function Authenticated({ auth, header, children }) {
                         <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
                             Dashboard
                         </ResponsiveNavLink>
+                        <ResponsiveNavLink href={route('dashboard.users')} active={route().current('dashboard.users')}>
+                            Users
+                        </ResponsiveNavLink>
                         <ResponsiveNavLink href={route('profile.edit')} active={route().current('profile.edit')}>
                             Profile
                         </ResponsiveNavLink>
