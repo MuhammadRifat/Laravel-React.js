@@ -1,36 +1,19 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link, useForm } from '@inertiajs/inertia-react';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
+import { Head } from '@inertiajs/inertia-react';
 import { Inertia } from '@inertiajs/inertia';
 
 export default function Users({ auth, users }) {
-    const { data, setData, delete: destroy, post, progress, processing, errors, reset } = useForm({
-        title: '',
-        news_category: '',
-        correspondent: '',
-        news_body: '',
-        news_image: ''
-    });
 
-    const onHandleChange = (event) => {
-        setData(event.target.name, event.target.type === 'checkbox' ? event.target.checked : event.target.value);
-    };
-
-    const handleDelete = (news_id) => {
-        Inertia.delete(`/dashboard/users/${news_id}`);
+    const handleDelete = (user_id) => {
+        Inertia.delete(`/dashboard/users/${user_id}`);
     }
 
-    const submit = (e) => {
-        e.preventDefault();
+    const handleMakeCorrespondent = (user_id) => {
+        console.log(user_id);
+        Inertia.patch(`/dashboard/users/${user_id}`);
+    }
 
-        post(route('dashboard.users.insert'));
-    };
-
-    console.log(auth);
     return (
         <AuthenticatedLayout
             auth={auth}
@@ -61,7 +44,7 @@ export default function Users({ auth, users }) {
                                                 <td className="border border-gray-300 p-2">{user.email}</td>
                                                 <td className="border border-gray-300 p-2">{user.role}</td>
                                                 <td className="border border-gray-300 p-2 text-center">
-                                                    <button className="btn bg-green-500 rounded-full px-3 py-1 text-white mx-1">Make Correspondent</button>
+                                                    <button onClick={() => handleMakeCorrespondent(user.id)} className="btn bg-green-500 rounded-full px-3 py-1 text-white mx-1">Make Correspondent</button>
                                                     <button className="btn bg-blue-500 rounded-full px-3 py-1 text-white mx-1">Edit</button>
                                                     <button onClick={() => handleDelete(user.id)} className="btn bg-red-500 rounded-full px-3 py-1 text-white mx-1">Delete</button>
                                                 </td>

@@ -2,8 +2,10 @@ import React from 'react';
 import { Link, Head } from '@inertiajs/inertia-react';
 import GuestLayout from '@/Layouts/GuestLayout';
 
-export default function Welcome({ auth, newses }) {
+export default function Welcome({ auth, newses, image_base_url }) {
     const firstNews = newses.data[0];
+
+    console.log(image_base_url);
     return (
         <GuestLayout auth={auth}>
             <Head title="Home" />
@@ -11,7 +13,7 @@ export default function Welcome({ auth, newses }) {
                 <Link href={`/news-details/${firstNews.id}`}>
                     <div className="flex w-full my-2 bg-white p-2">
                         <div className="md:w-1/2">
-                            <img src={firstNews.image_url} alt="" className="w-full" />
+                            <img src={image_base_url + firstNews.image_url} alt="" className="w-full" />
                         </div>
                         <div className="md:w-1/2 px-4 py-2">
                             <h1 className="text-3xl font-bold hover:underline">{firstNews.title}</h1>
@@ -25,7 +27,7 @@ export default function Welcome({ auth, newses }) {
                     {
                         newses?.data.slice(1, newses?.data.length).map(news => <div key={news.id} className="border rounded-md shadow bg-white">
                             <Link href={`/news-details/${news.id}`}>
-                                <img src={news.image_url} alt="" className="w-full" />
+                                <img src={image_base_url + news.image_url} alt="" className="w-full" />
                                 <div className="p-2">
                                     <h1 className="text-lg py-4 hover:underline font-semibold">{news.title}</h1>
                                     <span>{new Date(news.created_at).toLocaleString()}</span>

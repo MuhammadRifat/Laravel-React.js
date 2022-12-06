@@ -23,11 +23,16 @@ Route::get('/', function () {
     $newses = News::latest()->paginate(10);
     return Inertia::render('Welcome', [
         'newses' => $newses,
+        'image_base_url' => url('/')
     ]);
 });
 
 
 Route::get('/news-details/{news_id}', [NewsController::class, 'news_details']);
+
+Route::get('/welcome', function () {
+    return view('welcome');
+});
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -39,7 +44,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth', 'admin'])->group(function () {
+Route::middleware(['auth', 'admin_or_correspondent'])->group(function () {
     Route::get('/dashboard/newses', [NewsController::class, 'dashboard_newses'])->name('dashboard.newses');
     Route::post('/dashboard/newses', [NewsController::class, 'insert'])->name('dashboard.newses.insert');
     Route::delete('/dashboard/newses/{news_id}', [NewsController::class, 'delete'])->name('dashboard.newses.delete');
@@ -47,8 +52,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard/users', [UsersController::class, 'index'])->name('dashboard.users');
-    Route::post('/dashboard/users', [UsersController::class, 'insert'])->name('dashboard.users.insert');
-    Route::delete('/dashboard/users/{user_id}', [UsersController::class, 'delete'])->name('dashboard.users.delete');
+    Route::patch('/dashboard/users/{user_id}', [UsersController::class, 'make_correspondent'])->name('dashboard.users.make_correspondent');
+    Route::delete('/dashboard/users/{user_id}', [UsersController::class, 'destroy'])->name('dashboard.users.delete');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

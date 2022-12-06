@@ -116,15 +116,21 @@ export default function Authenticated({ auth, header, children }) {
                         <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
                             Dashboard
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink href={route('dashboard.users')} active={route().current('dashboard.users')}>
-                            Users
-                        </ResponsiveNavLink>
+                        {
+                            auth.user.role == 'admin' &&
+                            <ResponsiveNavLink href={route('dashboard.users')} active={route().current('dashboard.users')}>
+                                Users
+                            </ResponsiveNavLink>
+                        }
                         <ResponsiveNavLink href={route('profile.edit')} active={route().current('profile.edit')}>
                             Profile
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink href={route('dashboard.newses')} active={route().current('dashboard.newses')}>
-                            Newses
-                        </ResponsiveNavLink>
+                        {
+                            (auth.user.role == 'admin' || auth.user.role == 'correspondent') &&
+                            <ResponsiveNavLink href={route('dashboard.newses')} active={route().current('dashboard.newses')}>
+                                Newses
+                            </ResponsiveNavLink>
+                        }
                     </nav>
                 </div>
                 <div className="border w-full">

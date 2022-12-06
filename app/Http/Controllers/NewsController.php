@@ -6,6 +6,7 @@ use App\Models\News;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
@@ -13,25 +14,31 @@ class NewsController extends Controller
 {
     public function dashboard_newses(Request $request)
     {
-        $newses = News::latest()->paginate(10);
+        // $newses = Auth::user()->role == 'admin' ? News::latest()->paginate(10) : News::where('correspondent_id', Auth::id())->join('users', 'users.id', '=', 'news.correspondent_id')->get(['news.id', 'title', 'news_category', 'correspondent_id', 'news_body', 'image_url', 'image_title', 'news.created_at', 'users.name']);
+        $newses = Auth::user()->role == 'admin' ? News::latest()->paginate(10) : News::where('correspondent_id', Auth::id())->latest()->paginate(10);
+
         return Inertia::render('Backend/Newses/Index', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
             'newses' => $newses,
+            'image_base_url' => url('/'),
         ]);
     }
 
     public function insert(Request $request)
     {
+        $fileName = time() . '.' . $request->file->extension();
         News::insert([
             'title' => $request->title,
             'news_category' => $request->news_category,
-            'correspondent' => $request->correspondent,
+            'correspondent_id' => Auth::id(),
             'news_body' => $request->news_body,
-            'image_url' => 'https://cdn.educba.com/academy/wp-content/uploads/2019/09/What-is-Laravel.png',
+            'image_url' => '/uploads' . '/' . $fileName,
             'image_title' => 'Test',
             'created_at' => Carbon::now(),
         ]);
+
+        $request->file->move(public_path('uploads'), $fileName);
 
         return Redirect::route('dashboard.newses');
     }
@@ -45,11 +52,12 @@ class NewsController extends Controller
 
     public function news_details($news_id)
     {
-        $newses = News::latest()->paginate(6);
+        $newses = News::where('id', '!=', $news_id)->latest()->paginate(6);
         $news = News::find($news_id);
         return Inertia::render('NewsDetails', [
             'news' => $news,
-            'latest' => $newses
+            'latest' => $newses,
+            'image_base_url' => url('/'),
         ]);
     }
 }

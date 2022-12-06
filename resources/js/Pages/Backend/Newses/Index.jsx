@@ -13,7 +13,7 @@ export default function Index({ auth, newses }) {
         news_category: '',
         correspondent: '',
         news_body: '',
-        news_image: ''
+        file: null
     });
 
     const onHandleChange = (event) => {
@@ -30,7 +30,6 @@ export default function Index({ auth, newses }) {
         post(route('dashboard.newses.insert'));
     };
 
-    console.log(data);
     return (
         <AuthenticatedLayout
             auth={auth}
@@ -59,7 +58,7 @@ export default function Index({ auth, newses }) {
                                                 <td className="border border-gray-300 p-2">{index + 1}</td>
                                                 <td className="border border-gray-300 p-2">{news.title}</td>
                                                 <td className="border border-gray-300 p-2">{news.news_category}</td>
-                                                <td className="border border-gray-300 p-2">{news.correspondent}</td>
+                                                <td className="border border-gray-300 p-2">{news.correspondent_id}</td>
                                                 <td className="border border-gray-300 p-2 text-center">
                                                     <button className="btn bg-green-500 rounded-full px-3 py-1 text-white mx-1">Edit</button>
                                                     <button onClick={() => handleDelete(news.id)} className="btn bg-red-500 rounded-full px-3 py-1 text-white mx-1">Delete</button>
@@ -107,19 +106,20 @@ export default function Index({ auth, newses }) {
                                         </div>
 
                                         <div className="mt-4">
-                                            <InputLabel forInput="correspondent" value="correspondent" />
+                                            <label className="block font-medium text-sm text-gray-700">Image</label>
 
-                                            <TextInput
-                                                type="text"
-                                                name="correspondent"
-                                                value={data.correspondent}
-                                                className="mt-1 block w-full"
-                                                autoComplete="correspondent"
-                                                handleChange={onHandleChange}
-                                                required
+                                            <input
+                                                type="file"
+                                                className="w-full px-4 py-2 border"
+                                                label="File"
+                                                name="file"
+                                                onChange={(e) =>
+                                                    setData("file", e.target.files[0])
+                                                }
                                             />
-
-                                            <InputError message={errors.correspondent} className="mt-2" />
+                                            <span className="text-red-600">
+                                                {errors.file}
+                                            </span>
                                         </div>
 
                                         <div className="mt-4">
